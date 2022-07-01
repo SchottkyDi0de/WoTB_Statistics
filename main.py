@@ -1,55 +1,47 @@
 import wotb_api
-import discord
-from time import sleep
+import messages as m
+#import discord
 from discord.ext import commands
 from settings import bot_settings
+from parser import pars
 
 class App():
     def __init__(self):
         self.bot = commands.Bot(command_prefix=bot_settings['command_prefix'])
-        self.api = wotb_api.App()
+        self.api = wotb_api.get()
+        self.pars = pars()
+        
+    def error_handler(self,data):
+        for i in self.api.error_list:
+            if data == i:
+                return True
+        return False
 
     def main(self):
         @self.bot.command()
-        async def id(ctx):
-            data = ctx.message.content
-            data = data.split(' ')
-            
-            try:
-                player_name = data[1]
-            except:
-                await ctx.send('Ошибка, не указан ник игрока')
-            else:
-                player_id = self.api.get_id_for_name(player_name)
-                
-                if player_id == 'Error':
-                    for i in self.api.errors:
-                        errors = f'{i}\n'
-                        await ctx.send(errors)
-                
-                await ctx.send(f'Игрок {self.api.c_player_name} имеет id: {player_id}')
-            
-        @self.bot.command()
         async def stats(ctx):
-            data = ctx.message.content
-            data = data.split(' ')
-           
-            try:
-                player_name = data[1]
-            except:
-                await ctx.send('Ошибка, не указан ник игрока')
+            nickname = ctx.message.content
+            nickname = nickname.split(' ')
+            
+            if len(nickname) != 2:
+                await ctx.send(m.errors['NN'])
             else:
-                player_stats = self.api.get_player_stat_for_name(player_name)
+                print(f'Bot requset: {nickname}')
+                player_id = self.api.player_id(nickname[1])
+                if self.error_handler(player_id):
+                    await ctx.send(m.errors[player_id])
+                else:
+                    data = self.api.player_stats_for_id(player_id)
+                    stats = self.pars.get_data(data, player_id)
+                    await ctx.send(stats)
+                    
+        @self.bot.command()
+        async def ver(ctx):
+            await ctx.send(m.about)
             
-                if player_stats == 'Error':
-                    for i in self.api.errors:
-                        errors = f'{i}\n'
-                        await ctx.send(errors)
-                        continue
-                
-                await ctx.send(self.api.stats_descriptions)
-            
-        self.bot.run(bot_settings['token'])
+        
+        print('Bot started!')
+        self.bot.run(bot_settings['TOKEN'])
         
 if __name__ == '__main__':
     app = App()

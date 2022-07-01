@@ -1,6 +1,11 @@
-application_id = '8d8f19528e1f057ddfa045a6d153d91e'
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+WG_APP_ID = os.getenv('WG_APP_ID')
 bot_settings = {
-'token':'OTA0ODEzMzcyOTIxNDk1NTgy.GEOn1L.0P-UW4xPDGww1I46jZrQJDp6WgPLTxMC91jOn8',
+'TOKEN':os.getenv('DISCORD_TOKEN'),
 'name':'[HVOLT] WoTB Statistics',
-'command_prefix':'*'
+'command_prefix':'!'
 }
