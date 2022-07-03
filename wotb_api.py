@@ -20,7 +20,7 @@ class get():
     
     def player_id(self,player_name,region = 'ru',search_type = 'exact'):
         if len(player_name) < 3:
-            self.err_code = '400'
+            self.err_code = 'IN'
             print('Error: IN')
             return 'IN'
 
@@ -73,7 +73,7 @@ class get():
             
         data = requests.post(f'https://api.wotblitz.ru/wotb/account/info/\
         ?application_id={self.__app_id}&language={region}&extra\
-        =statistics.rating&fields=-statistics.clan&account_id={player_id}')
+        ={extra}&fields=-statistics.clan&account_id={player_id}')
         json_data = json.loads(data.text)
         return json_data
         
@@ -82,11 +82,23 @@ class get():
         stats = self.player_stats_for_id(player_id,region=region)
         #print(stats)
         return stats
+    
+    def server_status(self):
+        data = requests.post(f'https://api.worldoftanks.ru/wgn/servers/\
+info/?application_id={settings.WG_APP_ID}&game=wotb')
+        json_data = json.loads(data.text)
+        #print(json_data)
+        
+        if json_data['status'] == 'ok':
+            return json_data
+        else:
+            self.err_code = 'AE'
+            return 'AE'
         
         
         
 #api = get()
 #ps = parser.pars()
-#stat = api.player_stats('_ded_inside__1')
-#print(dict.keys(stat['data']))
-#print(ps.get_data(stat,id))
+#api.player_stats('jasz777','ru')
+#data = api.server_status()
+#print(ps.server_status(data))

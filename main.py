@@ -26,7 +26,7 @@ class App():
             if len(nickname) != 2:
                 await ctx.send(m.errors['NN'])
             else:
-                print(f'Bot requset: {nickname}')
+                print(f'Bot request: {nickname}')
                 player_id = self.api.player_id(nickname[1])
                 if self.error_handler(player_id):
                     await ctx.send(m.errors[player_id])
@@ -37,7 +37,19 @@ class App():
                     
         @self.bot.command()
         async def ver(ctx):
+            print('Bot request: Bot info')
             await ctx.send(m.about)
+            
+        @self.bot.command()
+        async def server(ctx):
+            data = self.api.server_status()
+            print('Bot request: Server status')
+            if self.error_handler(data):
+                print('Errror:',data)
+                await ctx.send(m.errors[data])
+            else:
+                status = self.pars.server_status(data)
+                await ctx.send(status)
             
         
         print('Bot started!')

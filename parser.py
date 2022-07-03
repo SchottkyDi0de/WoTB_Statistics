@@ -3,6 +3,18 @@ import datetime as dt
 class pars():
     def __init__(self):
         self.last_data = ''
+        self.last_server_status = ''
+        
+    def server_status(self,data):
+        players_online = data['data']['wotb'][0]['players_online']
+        server_name = data['data']['wotb'][0]['server']
+        self.last_server_status = f'''```
+        Статус серверов WoT Blitz:
+---------------------------------------
+Сервер: {server_name}
+Игроков онлайн: {players_online:,}
+```'''
+        return self.last_server_status
 
     def get_data(self,data,id):
         id = str(id)
@@ -44,12 +56,14 @@ class pars():
             survival = 0
             rd_damage = 0
             fr8_fr = 0
+            capture_points_coeff = 0
         else:
             winrate = round((wins / battles)*100,2)
             accuracy = round((hits / shots)*100,2)
             survival = round((survived_battles / battles)*100,2)
             rd_damage = round((damage_dealt / damage_received),2)
             fr8_fr = round((frags8p / (frags-frags8p)),2)
+            capture_points_coeff = round((capture_points/dropped_capture_point),2)
             
         # text:
         self.last_data = f'''```CSS
@@ -61,6 +75,7 @@ ID Аккаунта:  {id}
 Информация обновлена:  {updated_at}
 Взраст аккаунта:  {account_age} дней.
 ------------|Боевая статистика|-----------
+Боёв сыграно: {battles:,}
 Победы:  {wins:,}
 Поражения:  {losses:,}
 Процент побед:  {winrate}%
@@ -83,6 +98,7 @@ ID Аккаунта:  {id}
 
 Очки захвата:  {capture_points:,}
 Сбитые очки захвата:  {dropped_capture_point:,}
+Соотношение очков захвата: {capture_points_coeff}
 
 Всего опыта:  {xp:,}
 Максимум опыта за бой:  {max_xp:,}
