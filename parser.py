@@ -11,8 +11,8 @@ class pars():
         self.last_server_status = f'''```
         Статус серверов WoT Blitz:
 ---------------------------------------
-Сервер: {server_name}
-Игроков онлайн: {players_online:,}
+╔|Сервер: {server_name}
+╚|Игроков онлайн: {players_online:,}
 ```'''
         return self.last_server_status
 
