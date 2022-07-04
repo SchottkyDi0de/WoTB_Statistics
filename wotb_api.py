@@ -87,7 +87,7 @@ class get():
         data = requests.post(f'https://api.worldoftanks.ru/wgn/servers/\
 info/?application_id={settings.WG_APP_ID}&game=wotb')
         json_data = json.loads(data.text)
-        #print(json_data)
+        print(json_data)
         
         if json_data['status'] == 'ok':
             return json_data

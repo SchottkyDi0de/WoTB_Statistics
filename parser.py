@@ -1,21 +1,73 @@
 import datetime as dt
+from discord import Embed
 
 class pars():
     def __init__(self):
         self.last_data = ''
         self.last_server_status = ''
+        self.color_list = {
+        'gray' : 12237498,
+        'green' : 65280,
+        'blue' : 2518253,
+        'purple' : 12464383,
+        'red' : 16711680,
+        'orange' : 15763456,
+        }
+        
+        self.emb_dict = {
+        "title": '',
+        "color": '',
+        "description": '',
+        "timestamp": "",
+        "author": {
+        "name": "[HVOLT] WoTB Statistics"
+        },
+        "image": {},
+        "thumbnail": {},
+        "footer": {
+        "text": ""
+        },
+        "fields": []
+        }
+        
+    def color_set_online(self, online):
+        color = 000000
+        if online < 8000:
+            color = self.color_list['red']
+        elif online < 15000:
+            color = self.color_list['orange']
+        elif online >= 15000:
+            color = self.color_list['green']
+        return color
+            
+    def color_set_winrate(self, winrate):
+        color = 000000
+        if winrate < 48:
+            color = self.color_list['gray']
+        elif winrate < 60:
+            color = self.color_list['green']
+        elif winrate < 70:
+            color = self.color_list['blue']
+        elif winrate >= 70:
+            color = self.color_list['purple']
+        return color
         
     def server_status(self,data):
         players_online = data['data']['wotb'][0]['players_online']
         server_name = data['data']['wotb'][0]['server']
-        self.last_server_status = f'''```
-        Статус серверов WoT Blitz:
----------------------------------------
-╔|Сервер: {server_name}
-╚|Игроков онлайн: {players_online:,}
-```'''
-        return self.last_server_status
-
+        self.last_server_status = f'''
+🖥️ Сервер: {server_name}
+🎯 Игроков онлайн: {players_online:,}
+🖍️ Статус: ONLINE
+'''
+        emb_dict = self.emb_dict
+        emb_dict['title'] = 'Статус серверов WoT Blitz'
+        emb_dict['color'] = self.color_set_online(players_online)
+        emb_dict['description'] = self.last_server_status
+        emb_dict['footer']['text'] = '🔸 Цвет рамки текста зависит от текущего онлайна'
+        embed = Embed.from_dict(emb_dict)
+        return embed
+        
     def get_data(self,data,id):
         id = str(id)
         d = data
@@ -66,15 +118,14 @@ class pars():
             capture_points_coeff = round((capture_points/dropped_capture_point),2)
             
         # text:
-        self.last_data = f'''```CSS
-Игрок: {nickname}
------------|Основная информация|---------
-╔|Аккаунт создан:  {created_at}
-╠|ID Аккаунта:  {id}
-╠|Последный бой:  {last_battle}
-╠|Информация обновлена:  {updated_at}
-╚|Возраст аккаунта:  {account_age} дней.
-------------|Боевая статистика|-----------
+        self.last_data = f'''```
+--------|Основная информация|------
+╔|Аккаунт создан: {created_at}
+╠|ID Аккаунта: {id}
+╠|Последный бой: {last_battle}
+╠|Информация обновлена: {updated_at}
+╚|Возраст аккаунта: {account_age} дней.
+---------|Боевая статистика|--------
 ╔|Боёв сыграно: {battles:,}
 ╠|Победы:  {wins:,}
 ╠|Поражения:  {losses:,}
@@ -104,4 +155,21 @@ class pars():
 
 ═|Максимум уничтожено за бой:  {max_frags:,}
 ```'''
-        return self.last_data
+        emb_dict_stats = {
+        "title": nickname,
+        "color": self.color_set_winrate(winrate),
+        "description": self.last_data,
+        "timestamp": "",
+        "author": {
+        "name": "[HVOLT] WoTB Statistics"
+        },
+        "image": {},
+        "thumbnail": {},
+        "footer": {
+        "text": "🔸 Цвет рамки сообщения зависит от % побед исследуемого аккаунта."
+        },
+        "fields": []
+        }
+        embed_stats = Embed.from_dict(emb_dict_stats)
+      
+        return embed_stats
