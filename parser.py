@@ -28,7 +28,7 @@ class pars():
         datetime_now = dt.datetime.now()
         account_age = datetime_now - created_at ; account_age = account_age.days
         last_battle = dt.datetime.fromtimestamp(d['data'][id]['last_battle_time'])
-        updated_at = dt.datetime.fromtimestamp(d['data'][id]['updated_at'])
+        updated_at = dt.date.fromtimestamp(d['data'][id]['updated_at'])
         
         # battle_stats:
         spotted = d['data'][id]['statistics']['all']['spotted']
@@ -67,41 +67,41 @@ class pars():
             
         # text:
         self.last_data = f'''```CSS
-Игрок {nickname}
+Игрок: {nickname}
 -----------|Основная информация|---------
-╔Аккаунт создан:  {created_at}
-╠ID Аккаунта:  {id}
-╠Последный бой:  {last_battle}
-╠Информация обновлена:  {updated_at}
-╚Возраст аккаунта:  {account_age} дней.
+╔|Аккаунт создан:  {created_at}
+╠|ID Аккаунта:  {id}
+╠|Последный бой:  {last_battle}
+╠|Информация обновлена:  {updated_at}
+╚|Возраст аккаунта:  {account_age} дней.
 ------------|Боевая статистика|-----------
-╔Боёв сыграно: {battles:,}
-╠Победы:  {wins:,}
-╠Поражения:  {losses:,}
-╚Процент побед:  {winrate}%
+╔|Боёв сыграно: {battles:,}
+╠|Победы:  {wins:,}
+╠|Поражения:  {losses:,}
+╚|Процент побед:  {winrate}%
 
-╔Выстрелы:  {shots:,}
-╠Попадания:  {hits:,}
-╚Точность стрельбы:  {accuracy}%
+╔|Выстрелы:  {shots:,}
+╠|Попадания:  {hits:,}
+╚|Точность стрельбы:  {accuracy}%
 
-╔Выжил в боях:  {survived_battles:,}
-╠Победил и выжил:  {win_and_survived:,}
-╚Процент выживания:  {survival}%
+╔|Выжил в боях:  {survived_battles:,}
+╠|Победил и выжил:  {win_and_survived:,}
+╚|Процент выживания:  {survival}%
 
-╔Нанесено урона:  {damage_dealt:,}
-╠Получено урона:  {damage_received:,}
-╚Соотношение урона  (н/п): {rd_damage}
+╔|Нанесено урона:  {damage_dealt:,}
+╠|Получено урона:  {damage_received:,}
+╚|Соотношение урона  (н/п): {rd_damage}
 
-╔Уничтожено танков:  {frags:,}
-╠Уничтожено танков >= 8 ур:  {frags8p:,}
-╚Клэффициент frags8p:  {fr8_fr}
+╔|Уничтожено танков:  {frags:,}
+╠|Уничтожено танков >= 8 ур:  {frags8p:,}
+╚|Клэффициент frags8p:  {fr8_fr}
 
-╔Очки захвата:  {capture_points:,}
-╚Сбитые очки захвата:  {dropped_capture_point:,}
+╔|Очки захвата:  {capture_points:,}
+╚|Сбитые очки захвата:  {dropped_capture_point:,}
 
-╔Всего опыта:  {xp:,}
-╚Максимум опыта за бой:  {max_xp:,}
+╔|Всего опыта:  {xp:,}
+╚|Максимум опыта за бой:  {max_xp:,}
 
-═Максимум уничтожено за бой:  {max_frags:,}
+═|Максимум уничтожено за бой:  {max_frags:,}
 ```'''
         return self.last_data
