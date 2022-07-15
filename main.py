@@ -51,7 +51,7 @@ class App():
                 
         @self.bot.command()
         async def ver(ctx):
-            await ctx.send(embed = self.msg.about_embed)
+            await ctx.send(embed = self.msg.about_embed())
             
         @self.bot.command()
         async def server(ctx):
